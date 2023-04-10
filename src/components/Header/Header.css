@@ -1,0 +1,14 @@
+.header {
+    height: 70px;
+    margin: 5px;
+    border-radius: 10px;
+    background-color: rgba(91,155,213,255);
+}
+
+.btnlogin {
+    color: white;
+}
+
+.btnlogout {
+    color: white;
+}
