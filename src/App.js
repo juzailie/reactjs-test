@@ -8,6 +8,10 @@ import Sidemenu from './components/Sidemenu/Sidemenu'
 import Login from './components/Login/Login';
 import Resetpassword from './components/Resetpassword/Resetpassword';
 import AuthContext from './context/auth-context';
+import MyProfile from './components/MyProfile/MyProfile';
+import ChangePassword from './components/ChangePassword/ChangePassword';
+import Products from './components/Products/Products';
+import MainPage from './components/MainPage/MainPage';
 
 class App extends Component {
 
@@ -21,7 +25,15 @@ class App extends Component {
   }
 
   loginHandler = () => {
+    
+    // validate username and password
+
     this.setState({authenticated: true});
+    
+  };
+
+  logoutHandler = () => {
+    this.setState({authenticated: false});
   };
 
   render(){
@@ -30,27 +42,33 @@ class App extends Component {
 
         <div className="container-fluid">
 
-          <AuthContext.Provider value={{ authenticated: this.state.authenticated, login: this.loginHandler }}>
+          <AuthContext.Provider value={{ authenticated: this.state.authenticated, login: this.loginHandler, logout: this.logoutHandler }}>
             
             <div className='row'>
               <div className='col col-md-12'>
                 <div className='header'>
-                  <Header login={this.loginHandler}></Header>
+                  <Header authenticated={this.state.authenticated} login={this.loginHandler} logout={this.logoutHandler}></Header>
                 </div>
               </div>
             </div>
 
             <div className='row'>
+            { this.state.authenticated ? (
               <div className='col col-md-2'>
-                  { this.state.authenticated ? (<Sidemenu></Sidemenu>) : null }
+                  <Sidemenu></Sidemenu>
               </div>
+              ) : null 
+            }
               <div className='col col-md-10'>
                 <div>
                   <Switch>
                     <Route path="/login" render={() => <Login login={this.loginHandler} />} />
                     <Route path="/logout" render={() => <Login login={this.loginHandler} />} />
                     <Route path="/forgotpwd" render={() => <Resetpassword />} />
-                    <Route render={() => <h1>Main Page</h1>}/>
+                    <Route path="/myprofile" render={() => this.state.authenticated ? (<MyProfile />) : <h1>Unauthorized</h1>} />
+                    <Route path="/changepassword" render={() => this.state.authenticated ? (<ChangePassword />) : <h1>Unauthorized</h1>} />
+                    <Route path="/products" render={() => this.state.authenticated ? <Products /> : <h1>Unauthorized</h1>} />
+                    <Route render={() => <MainPage/>}/>
                   </Switch>
                 </div>
               </div>

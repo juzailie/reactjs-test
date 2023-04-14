@@ -17,8 +17,10 @@ const Header = (props) => {
             <Clock/>
             <div className='row justify-content-end'>
                 <div className='col col-md-12'>
-                    <NavLink className={"btn btn-default btnlogin"} to="/login" exact>Login</NavLink>
-                    <button type="button" className={"btn btn-default btnlogout"} onClick={authContext.login}>Logout</button>
+                    { props.authenticated === true ? 
+                      (<button type="button" className={"btn btn-default btnlogout"} onClick={authContext.logout}>Logout</button>) 
+                      : (<NavLink className={"btn btn-default btnlogin"} to="/login" exact>Login</NavLink> )
+                    }
                 </div>
             </div>
           </div>
