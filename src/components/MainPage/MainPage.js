@@ -5,7 +5,7 @@ const MainPage = (props) => {
 
     return (
       <div>
-          <iframe src="https://www.google.com/webhp?igu=1" frameborder="0" className="google-iframe"></iframe>
+          <iframe title="google" src="https://www.google.com/webhp?igu=1" frameborder="0" className="google-iframe"></iframe>
       </div>
     );
   

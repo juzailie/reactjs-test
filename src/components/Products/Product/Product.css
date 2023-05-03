@@ -1,0 +1,14 @@
+.product-img {
+    width: 300px;
+}
+
+.product-desc-limiter {
+    width: 100%;
+    line-height: 1.2em;
+    height: 3.6em;
+    background-color: gainsboro;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}

@@ -29,7 +29,7 @@ class App extends Component {
     // validate username and password
 
     this.setState({authenticated: true});
-    
+
   };
 
   logoutHandler = () => {

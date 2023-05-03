@@ -1,23 +1,36 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+
+import Product from './Product/Product';
+
 import './Products.css';
 
 class Products extends Component {
-   
-    renderProducts(){
-        
-        // get products
 
-        return (
-            <tr>
-                <td>name text</td>
-                <td>description text</td>
-                <td>image path</td>
-                <td>price value</td>
-            </tr>
-        );
-    };
+    state = {
+        products: []
+    }
+
+    componentDidMount(){
+        axios.get("https://localhost:44360/api/Products")
+            .then((response) => {
+                console.log("response ", response);
+                this.setState({ products: response.data })
+            })
+    }
 
     render(){
+
+        const products = this.state.products.map(prod => {
+            return (
+                <Product 
+                    name={prod.name} 
+                    desc={prod.description} 
+                    imgpath={prod.imagePath}
+                    variants={prod.productVariants}/>
+            )
+        })
+
         return (
             <div className="row">
                 <div className="col-md-6">
@@ -31,7 +44,7 @@ class Products extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            { this.renderProducts() }
+                            { products }
                         </tbody>
                     </table>
                 </div>
