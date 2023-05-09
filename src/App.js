@@ -21,18 +21,19 @@ class App extends Component {
   }
 
   state = {
-    authenticated: false
+    authenticated: false,
+    username: "",
+    password: ""
   }
 
-  loginHandler = () => {
-    
-    // validate username and password
-
-    this.setState({authenticated: true});
-
+  loginHandler = (authenticated) => {
+    console.log("loginhandler", this.props);
+    this.setState({authenticated: authenticated});
   };
 
   logoutHandler = () => {
+    console.log("logoutHandler", this.props);
+    window.location.href = "/login"
     this.setState({authenticated: false});
   };
 
@@ -53,16 +54,18 @@ class App extends Component {
             </div>
 
             <div className='row'>
+
             { this.state.authenticated ? (
               <div className='col col-md-2'>
                   <Sidemenu></Sidemenu>
               </div>
               ) : null 
             }
+
               <div className='col col-md-10'>
                 <div>
                   <Switch>
-                    <Route path="/login" render={() => <Login login={this.loginHandler} />} />
+                    <Route path="/login" render={() => <Login login={this.loginHandler} password={this.state.password} username={this.state.username}/>} />
                     <Route path="/logout" render={() => <Login login={this.loginHandler} />} />
                     <Route path="/forgotpwd" render={() => <Resetpassword />} />
                     <Route path="/myprofile" render={() => this.state.authenticated ? (<MyProfile />) : <h1>Unauthorized</h1>} />
@@ -72,6 +75,7 @@ class App extends Component {
                   </Switch>
                 </div>
               </div>
+
             </div>
            
           </AuthContext.Provider>

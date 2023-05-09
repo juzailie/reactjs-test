@@ -8,7 +8,7 @@ class Resetpassword extends Component {
       return (
             <div>
                 <div className="row">
-                    <div className="col-xs-12 col-sm-10 col-md-3 col-sm-offset-1 col-md-offset-4">
+                    <div className="col-md-3 offset-md-5">
                         <form>
                             <div id="user-data">
                                 <div className="form-group">
@@ -34,7 +34,7 @@ class Resetpassword extends Component {
                 </div>
                 <br/>
                 <div className="row">
-                    <div className="col-md-3 col-md-offset-4">
+                    <div className="col-md-3 offset-md-5">
                         <div className="alert alert-success">
                             Password reset success!<br/><br/>
                             {/* This is your new temporary password : <b>{{ temporaryPassword }}</b> */}
@@ -42,7 +42,7 @@ class Resetpassword extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-md-3 col-md-offset-4">
+                    <div className="col-md-3 offset-md-5">
                         <div className="alert alert-danger">
                             Account not found, reset password failed
                         </div>

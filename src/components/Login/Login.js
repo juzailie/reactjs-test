@@ -1,64 +1,221 @@
-import React, { useEffect, useContext } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useContext, Component } from 'react';
+import { NavLink, withRouter } from 'react-router-dom';
 import './Login.css';
-import AuthContext from "../../context/auth-context";
+import Button from '../Generic/Button/Button';
+import Input from '../Generic/Input/Input';
+import axios from 'axios';
+import AuthService from '../../Services/AuthService';
 
-const Login = (props) => {
+class Login extends Component {
 
-    const authContext = useContext(AuthContext);
+    state = {
+        orderForm: {
+            name: {
+                label: 'Username',
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Username'
+                },
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
+            },
+            password: {
+                label: 'Password',
+                elementType: 'input',
+                elementConfig: {
+                    type: 'password',
+                    placeholder: 'Password'
+                },
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
+            }
+        },
+        formIsValid: false,
+        loading: false
+    }
 
-    useEffect(() => {
-        return () => { console.log("cockpit.js cleanup work in useEffect");  };
-    }, []); // will only execute once after component rendered
+    loginHandler = (event) => {
+        event.preventDetault();
+    }
 
-    return (
-        <div>
-            <div className="row justify-content-md-center">
-                <div className="col-xs-12 col-sm-10 col-md-6 col-sm-offset-1 col-md-offset-3">
-                    <center><span>Sign in to start your session</span></center>
+    orderHandler = ( event ) => {
+
+        event.preventDefault();
+
+        // authenticate user credential
+        AuthService.authticate( {
+            username: this.state.orderForm.name.value,
+            password: this.state.orderForm.password.value
+          }).then((response) => {
+            console.log(response);
+            let data = response.data;
+            if(response.status == 200)
+                this.validateloginresult(data);
+          });
+    
+        // axios.post('https://localhost:44360/api/Auth', {
+        //     username: this.state.orderForm.name.value,
+        //     password: this.state.orderForm.password.value
+        //   })
+        //   .then(function (response) {
+        //   })
+        //   .catch(function (error) {
+        //     console.log(error);
+        //   });
+
+    }
+
+    validateloginresult(data){
+        if(data.status == true)
+        {
+            this.props.login(data.status);
+            this.props.history.push("/myprofile");
+        }else{
+            // TODO: show error msg
+            alert("invalid credential")
+        }
+    }
+
+    checkValidity(value, rules) {
+        let isValid = true;
+        
+        if (rules.required) {
+            isValid = value.trim() !== '' && isValid;
+        }
+
+        if (rules.minLength) {
+            isValid = value.length >= rules.minLength && isValid
+        }
+
+        if (rules.maxLength) {
+            isValid = value.length <= rules.maxLength && isValid
+        }
+
+        return isValid;
+    }
+
+    inputChangedHandler = (event, inputIdentifier) => {
+        const updatedOrderForm = {
+            ...this.state.orderForm
+        };
+        const updatedFormElement = { 
+            ...updatedOrderForm[inputIdentifier]
+        };
+        updatedFormElement.value = event.target.value;
+        updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+        updatedFormElement.touched = true;
+        updatedOrderForm[inputIdentifier] = updatedFormElement;
+        
+        let formIsValid = true;
+        for (let inputIdentifier in updatedOrderForm) {
+            formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
+        }
+        this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid});
+    }
+
+    render (){
+
+        const formElementsArray = [];
+        for (let key in this.state.orderForm) {
+            formElementsArray.push({
+                id: key,
+                config: this.state.orderForm[key]
+            });
+        }
+
+        let form = (
+            <form onSubmit={this.orderHandler}>
+                <div id="login-data">
+                {formElementsArray.map(formElement => (
+                    <Input 
+                        key={formElement.id}
+                        elementType={formElement.config.elementType}
+                        elementConfig={formElement.config.elementConfig}
+                        label={formElement.config.label}
+                        value={formElement.config.value}
+                        invalid={!formElement.config.valid}
+                        shouldValidate={formElement.config.validation}
+                        touched={formElement.config.touched}
+                        changed={(event) => this.inputChangedHandler(event, formElement.id)} />
+                ))}
                 </div>
-            </div>
-            <div className="row justify-content-md-center">
-                <div className="col-xs-12 col-sm-10 col-md-6 col-sm-offset-1 col-md-offset-3">
-                    <form>
-                        <div id="login-data">
-                            <div className="form-group">
-                                <label>Username</label>
-                                <input type="text" 
-                                    id="username" 
-                                    placeholder="UserName" 
-                                    className="form-control" 
-                                    required />
-                                {/* <span class="help-block">Username is required</span> */}
-                            </div>
-                            <div className="form-group">
-                                <label>Password</label>
-                                <input type="password" 
-                                    id="password" 
-                                    placeholder="Password" 
-                                    className="form-control" 
-                                    required />
-                                {/* <span class="help-block" >Password is required</span> */}
-                            </div>
-                            <div className="form-group">
-                                <div className="row pull-left">
-                                    <div className="col-md-12">
-                                        <NavLink className={"btn btn-link forgot-password"} to="/forgotpwd" exact>I forgot my password</NavLink>
-                                    </div>
-                                </div>
-                                <div className="row pull-right">
-                                    <div className="col-md-12">
-                                        <button type="button" className="btn btn-danger" onClick={authContext.login}>Sign In</button>
-                                    </div>
-                                </div>
-                            </div>
+                <div className="form-group">
+                    <div className="row pull-left">
+                        <div className="col-md-12">
+                            <NavLink className={"btn btn-link forgot-password"} to="/forgotpwd" exact>I forgot my password</NavLink>
                         </div>
-                    </form>
+                    </div>
+                    <div className="row pull-right">
+                        <div className="col-md-12">
+                            <Button disabled={!this.state.formIsValid}>Sign in</Button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        );
+
+        return (
+
+            <div>
+                <div className="row justify-content-md-center">
+                    <div className="col-md-3 offset-md-2">
+                        <center><span>Sign in to start your session</span></center>
+                    </div>
+                </div>
+                <div className="row justify-content-md-center">
+                    <div className="col-md-3 offset-md-2">
+                        {form}
+
+                        {/* <form onSubmit={loginHandler}>
+                            <div id="login-data">
+                                <div className="form-group">
+                                    <label>Username</label>
+                                    <input type="text"
+                                        id="username" 
+                                        placeholder="UserName" 
+                                        className="form-control" 
+                                        required />
+                                </div>
+                                <div className="form-group">
+                                    <label>Password</label>
+                                    <input type="password"
+                                        id="password" 
+                                        placeholder="Password" 
+                                        className="form-control" 
+                                        required />
+                                </div>
+                                <div className="form-group">
+                                    <div className="row pull-left">
+                                        <div className="col-md-12">
+                                            <NavLink className={"btn btn-link forgot-password"} to="/forgotpwd" exact>I forgot my password</NavLink>
+                                        </div>
+                                    </div>
+                                    <div className="row pull-right">
+                                        <div className="col-md-12">
+                                            <button type="button" className="btn btn-danger" onClick={authContext.login}>Sign In</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form> */}
+
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
   
 };
   
-export default React.memo(Login);
+export default withRouter(Login); 
+
+//React.memo(Login);
