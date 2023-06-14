@@ -49,15 +49,20 @@ class Login extends Component {
 
         event.preventDefault();
 
-        // authenticate user credential
-        AuthService.authticate( {
-            username: this.state.orderForm.name.value,
-            password: this.state.orderForm.password.value
-          }).then((response) => {
-            let data = response.data;
-            if(response.status === 200)
-                this.validateloginresult(data);
-          });
+        this.validateAllInputs();
+
+        if(this.state.formIsValid)
+        {
+            // authenticate user credential
+            AuthService.authticate( {
+                username: this.state.orderForm.name.value,
+                password: this.state.orderForm.password.value
+            }).then((response) => {
+                let data = response.data;
+                if(response.status === 200)
+                    this.validateloginresult(data);
+            });
+        }
     }
 
     validateloginresult(data){
@@ -108,6 +113,29 @@ class Login extends Component {
         this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid});
     }
 
+    validateAllInputs = () => {
+        const updatedOrderForm = {
+            ...this.state.orderForm
+        };
+
+        for (let key in this.state.orderForm) {
+
+            const updatedFormElement = { 
+                ...updatedOrderForm[key]
+            };
+
+            updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+            updatedFormElement.touched = true;
+            updatedOrderForm[key] = updatedFormElement;
+        }
+
+        let formIsValid = true;
+        for (let inputIdentifier in updatedOrderForm) {
+            formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
+        }
+        this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid});
+    }
+    
     render (){
 
         const formElementsArray = [];
