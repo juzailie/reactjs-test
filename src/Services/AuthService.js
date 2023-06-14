@@ -4,9 +4,10 @@ const AUTHENTICATION_API_BASE_URL = "https://localhost:44360/api/Auth";
 
 class AuthService {
 
-    authticate(credential){
-        return axios.post(AUTHENTICATION_API_BASE_URL, credential);
+    static authticate(request){
+        return axios.post(AUTHENTICATION_API_BASE_URL, request);
     }
+
     getEmployees(){
         return axios.get(AUTHENTICATION_API_BASE_URL);
     }
@@ -28,4 +29,4 @@ class AuthService {
     }
 }
 
-export default new AuthService()
+export default AuthService

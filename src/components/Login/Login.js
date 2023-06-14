@@ -1,9 +1,8 @@
-import React, { useEffect, useContext, Component } from 'react';
+import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import './Login.css';
 import Button from '../Generic/Button/Button';
 import Input from '../Generic/Input/Input';
-import axios from 'axios';
 import AuthService from '../../Services/AuthService';
 
 class Login extends Component {
@@ -19,7 +18,8 @@ class Login extends Component {
                 },
                 value: '',
                 validation: {
-                    required: true
+                    required: true,
+                    message: "Username is required"
                 },
                 valid: false,
                 touched: false
@@ -33,21 +33,19 @@ class Login extends Component {
                 },
                 value: '',
                 validation: {
-                    required: true
+                    required: true,
+                    message: "Password is required"
                 },
                 valid: false,
                 touched: false
             }
         },
+        dovalidation: false,
         formIsValid: false,
         loading: false
     }
 
-    loginHandler = (event) => {
-        event.preventDetault();
-    }
-
-    orderHandler = ( event ) => {
+    loginHandler = ( event ) => {
 
         event.preventDefault();
 
@@ -56,26 +54,14 @@ class Login extends Component {
             username: this.state.orderForm.name.value,
             password: this.state.orderForm.password.value
           }).then((response) => {
-            console.log(response);
             let data = response.data;
-            if(response.status == 200)
+            if(response.status === 200)
                 this.validateloginresult(data);
           });
-    
-        // axios.post('https://localhost:44360/api/Auth', {
-        //     username: this.state.orderForm.name.value,
-        //     password: this.state.orderForm.password.value
-        //   })
-        //   .then(function (response) {
-        //   })
-        //   .catch(function (error) {
-        //     console.log(error);
-        //   });
-
     }
 
     validateloginresult(data){
-        if(data.status == true)
+        if(data.status === true)
         {
             this.props.login(data.status);
             this.props.history.push("/myprofile");
@@ -126,6 +112,9 @@ class Login extends Component {
 
         const formElementsArray = [];
         for (let key in this.state.orderForm) {
+
+            console.log("key ", key);
+
             formElementsArray.push({
                 id: key,
                 config: this.state.orderForm[key]
@@ -133,7 +122,7 @@ class Login extends Component {
         }
 
         let form = (
-            <form onSubmit={this.orderHandler}>
+            <form onSubmit={this.loginHandler}>
                 <div id="login-data">
                 {formElementsArray.map(formElement => (
                     <Input 
@@ -144,6 +133,7 @@ class Login extends Component {
                         value={formElement.config.value}
                         invalid={!formElement.config.valid}
                         shouldValidate={formElement.config.validation}
+                        validation_message={formElement.config.validation.message}
                         touched={formElement.config.touched}
                         changed={(event) => this.inputChangedHandler(event, formElement.id)} />
                 ))}
@@ -156,7 +146,7 @@ class Login extends Component {
                     </div>
                     <div className="row pull-right">
                         <div className="col-md-12">
-                            <Button disabled={!this.state.formIsValid}>Sign in</Button>
+                            <Button>Sign in</Button>
                         </div>
                     </div>
                 </div>
@@ -175,7 +165,8 @@ class Login extends Component {
                     <div className="col-md-3 offset-md-2">
                         {form}
 
-                        {/* <form onSubmit={loginHandler}>
+
+                         {/* <form onSubmit={loginHandler}>
                             <div id="login-data">
                                 <div className="form-group">
                                     <label>Username</label>

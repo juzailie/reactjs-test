@@ -3,11 +3,12 @@ import React from 'react';
 import classes from './Input.css';
 
 const input = ( props ) => {
+
     let inputElement = null;
     const inputClasses = ["form-control"];
 
     if (props.invalid && props.shouldValidate && props.touched) {
-        inputClasses.push("Invalid");
+        inputClasses.push("is-invalid");
     }
 
     switch ( props.elementType ) {
@@ -58,6 +59,7 @@ const input = ( props ) => {
         <div className="form-group">
             <label >{props.label}</label>
             {inputElement}
+            <span className="invalid-feedback">{props.validation_message}</span>
         </div>
     );
 

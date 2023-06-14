@@ -12,13 +12,9 @@ import MyProfile from './components/MyProfile/MyProfile';
 import ChangePassword from './components/ChangePassword/ChangePassword';
 import Products from './components/Products/Products';
 import MainPage from './components/MainPage/MainPage';
+import Breadcrumb from './components/Breadcrumb/Breadcrumb';
 
 class App extends Component {
-
-  constructor(props){
-    super(props);
-    console.log("App.js constructor");
-  }
 
   state = {
     authenticated: false,
@@ -43,12 +39,21 @@ class App extends Component {
 
         <div className="container-fluid">
 
+          
           <AuthContext.Provider value={{ authenticated: this.state.authenticated, login: this.loginHandler, logout: this.logoutHandler }}>
             
             <div className='row'>
               <div className='col col-md-12'>
                 <div className='header'>
                   <Header authenticated={this.state.authenticated} login={this.loginHandler} logout={this.logoutHandler}></Header>
+                </div>
+              </div>
+            </div>
+            
+            <div className='row'>
+              <div className='col col-md-12'>
+                <div className='breadcrumb'>
+                  <Breadcrumb></Breadcrumb>
                 </div>
               </div>
             </div>

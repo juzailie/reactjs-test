@@ -1,3 +1,7 @@
 .App {
   text-align: center;
 }
+
+.breadcrumb{
+  margin-left: 5px;
+}
