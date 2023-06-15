@@ -1,10 +1,10 @@
-import React, { useState  } from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Resetpassword.css';
 import UserService from '../../Services/UserService';
 
 const Resetpassword = () => {
-    
+
     const [username, setUsername] = useState('');
     const [temppassword, settemppassword] = useState('');
     const [resetpasswordresult, setresetpasswordresult] = useState('');
@@ -21,7 +21,7 @@ const Resetpassword = () => {
 
             setError('Username is required.');
 
-        } else  {
+        } else {
 
             // clear error messages
             setError('');
@@ -30,7 +30,7 @@ const Resetpassword = () => {
             UserService.resetpassword(username)
                 .then((response) => {
                     let data = response.data;
-                    if(response.status === 200) {
+                    if (response.status === 200) {
                         settemppassword(data.temporarypassword);
                         setresetpasswordresult(true);
                     } else if (response.status === 404) {
@@ -40,7 +40,22 @@ const Resetpassword = () => {
         }
 
     }
-      
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        
+        console.log("handleChange", [name, value]);
+
+        if (name === 'username'){
+            setUsername(value);
+        }
+
+        setError('');
+        if (name === 'username' && value.trim() === '') {
+            setError('Username is required.');
+        }
+    };
+
     return (
         <div>
             <div className="row">
@@ -49,8 +64,13 @@ const Resetpassword = () => {
                         <div id="user-data">
                             <div className="form-group">
                                 <label>Reset Password</label>
-                                <input type="text" placeholder="username" className={`form-control ${error && 'is-invalid'}`} 
-                                    value={username} onChange={(e) => setUsername(e.target.value)}/>
+                                <input 
+                                    type="text" 
+                                    name="username"
+                                    placeholder="username" 
+                                    className={`form-control ${error && 'is-invalid'}`}
+                                    value={username} 
+                                    onChange={handleChange} />
                                 <span className="invalid-feedback">{error}</span>
                             </div>
                             <div className="form-group">
@@ -70,13 +90,13 @@ const Resetpassword = () => {
                 </div>
             </div>
 
-            <br/>
- 
+            <br />
+
             {resetpasswordresult && submited && (
                 <div className="row">
                     <div className="col-md-3 offset-md-5">
                         <div className="alert alert-success">
-                            Password reset success!<br/><br/>
+                            Password reset success!<br /><br />
                             This is your new temporary password : <b>{temppassword}</b>
                         </div>
                     </div>
@@ -92,10 +112,10 @@ const Resetpassword = () => {
                     </div>
                 </div>
             )}
-          
+
         </div>
-  );
-  
+    );
+
 }
-  
+
 export default Resetpassword;

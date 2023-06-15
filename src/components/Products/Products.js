@@ -1,57 +1,73 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-
 import Product from './Product/Product';
-
 import './Products.css';
+import { AuthContext } from "../../context/auth-context";
+import ProductService from '../../Services/ProductService';
 
 class Products extends Component {
+
+    static contextType = AuthContext;
 
     state = {
         products: []
     }
 
-    componentDidMount(){
-        axios.get("https://localhost:44360/api/Products")
+    componentDidMount() {
+
+        console.log("response before ", this.state.products);
+
+        ProductService.products()
             .then((response) => {
-                console.log("response ", response);
+
+                console.log("response after ", this.state.products);
+
                 this.setState({ products: response.data })
             })
     }
 
-    render(){
+    render() {
+
+        const { authenticated } = this.context;
 
         const products = this.state.products.map(prod => {
             return (
-                <Product 
-                    name={prod.name} 
-                    desc={prod.description} 
+                <Product
+                    name={prod.name}
+                    desc={prod.description}
                     imgpath={prod.imagePath}
-                    variants={prod.productVariants}/>
+                    variants={prod.productVariants} />
             )
         })
 
         return (
             <div className="row">
-                <div className="col-md-6">
-                    <table className='table'>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Image</th>
-                                <th>Price Range (RM)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            { products }
-                        </tbody>
-                    </table>
-                </div>
+                {authenticated && (
+                    <div className="col-md-6">
+                        <table className='table'>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Image</th>
+                                    <th>Price Range (RM)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {products}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+                {!authenticated && (
+                    <div className="col-md-3 offset-md-6">
+                        <h1>Unauthorized</h1>
+                    </div>
+                )}
             </div>
         );
     }
-  
+
 };
-  
-export default Products;
+
+export default React.memo(Products);

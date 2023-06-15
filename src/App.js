@@ -7,7 +7,7 @@ import Header from './components/Header/Header'
 import Sidemenu from './components/Sidemenu/Sidemenu'
 import Login from './components/Login/Login';
 import Resetpassword from './components/Resetpassword/Resetpassword';
-import AuthContext from './context/auth-context';
+import { AuthProvider } from './context/auth-context';
 import MyProfile from './components/MyProfile/MyProfile';
 import ChangePassword from './components/ChangePassword/ChangePassword';
 import Products from './components/Products/Products';
@@ -24,32 +24,32 @@ class App extends Component {
 
   loginHandler = (authenticated) => {
     console.log("loginhandler", this.props);
-    this.setState({authenticated: authenticated});
+    this.setState({ authenticated: authenticated });
   };
 
   logoutHandler = () => {
     console.log("logoutHandler", this.props);
     window.location.href = "/login"
-    this.setState({authenticated: false});
+    this.setState({ authenticated: false });
   };
 
-  render(){
+  render() {
     return (
       <BrowserRouter>
 
         <div className="container-fluid">
 
-          
-          <AuthContext.Provider value={{ authenticated: this.state.authenticated, login: this.loginHandler, logout: this.logoutHandler }}>
-            
+
+          <AuthProvider>
+
             <div className='row'>
               <div className='col col-md-12'>
                 <div className='header'>
-                  <Header authenticated={this.state.authenticated} login={this.loginHandler} logout={this.logoutHandler}></Header>
+                  <Header></Header>
                 </div>
               </div>
             </div>
-            
+
             <div className='row'>
               <div className='col col-md-12'>
                 <div className='breadcrumb'>
@@ -59,35 +59,30 @@ class App extends Component {
             </div>
 
             <div className='row'>
-
-            { this.state.authenticated ? (
-              <div className='col col-md-2'>
-                  <Sidemenu></Sidemenu>
-              </div>
-              ) : null 
-            }
+           
+              <Sidemenu></Sidemenu>
 
               <div className='col col-md-10'>
                 <div>
                   <Switch>
-                    <Route path="/login" render={() => <Login login={this.loginHandler} password={this.state.password} username={this.state.username}/>} />
+                    <Route path="/login" render={() => <Login login={this.loginHandler} />} />
                     <Route path="/logout" render={() => <Login login={this.loginHandler} />} />
                     <Route path="/forgotpwd" render={() => <Resetpassword />} />
-                    <Route path="/myprofile" render={() => this.state.authenticated ? (<MyProfile />) : <h1>Unauthorized</h1>} />
-                    <Route path="/changepassword" render={() => this.state.authenticated ? (<ChangePassword />) : <h1>Unauthorized</h1>} />
-                    <Route path="/products" render={() => this.state.authenticated ? <Products /> : <h1>Unauthorized</h1>} />
-                    <Route render={() => <MainPage/>}/>
+                    <Route path="/myprofile" render={() => <MyProfile />} />
+                    <Route path="/changepassword" render={() => <ChangePassword />} />
+                    <Route path="/products" render={() => <Products />} />
+                    <Route render={() => <MainPage />} />
                   </Switch>
                 </div>
               </div>
 
             </div>
-           
-          </AuthContext.Provider>
+
+          </AuthProvider>
 
         </div>
-        
-        </BrowserRouter>
+
+      </BrowserRouter>
     );
   }
 
