@@ -59,7 +59,7 @@ class App extends Component {
             </div>
 
             <div className='row'>
-           
+              
               <Sidemenu></Sidemenu>
 
               <div className='col col-md-10'>

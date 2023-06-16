@@ -43,6 +43,7 @@ class Login extends Component {
                 password: password
             }).then((response) => {
                 let data = response.data;
+                console.log("login data", data);
                 if (response.status === 200) {
                     this.validateAuthResult(data);
                 }
@@ -74,12 +75,9 @@ class Login extends Component {
 
         if (data.status === true) {
             // update auth context
-            login(username, password);
-
+            login(username, password, data.id);
             // navigate to myprofile
-            // this.props.login(data.status);
             this.props.history.push("/myprofile");
-
         } else {
             // TODO: show error msg
             alert("Username or password is incorrect")

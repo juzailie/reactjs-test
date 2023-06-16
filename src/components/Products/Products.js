@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import Product from './Product/Product';
 import './Products.css';
 import { AuthContext } from "../../context/auth-context";
@@ -14,14 +13,8 @@ class Products extends Component {
     }
 
     componentDidMount() {
-
-        console.log("response before ", this.state.products);
-
         ProductService.products()
             .then((response) => {
-
-                console.log("response after ", this.state.products);
-
                 this.setState({ products: response.data })
             })
     }
@@ -32,7 +25,8 @@ class Products extends Component {
 
         const products = this.state.products.map(prod => {
             return (
-                <Product
+                <Product 
+                    id={prod.id}
                     name={prod.name}
                     desc={prod.description}
                     imgpath={prod.imagePath}
