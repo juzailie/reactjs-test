@@ -7,6 +7,10 @@ class ProductService {
     static products(){
         return axios.get(PRODUCT_API_BASE_URL);
     }
+
+    static get(prodid){
+        return axios.get(PRODUCT_API_BASE_URL + "/" + prodid);
+    }
 }
 
 export default ProductService

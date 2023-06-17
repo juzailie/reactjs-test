@@ -11,6 +11,7 @@ import { AuthProvider } from './context/auth-context';
 import MyProfile from './components/MyProfile/MyProfile';
 import ChangePassword from './components/ChangePassword/ChangePassword';
 import Products from './components/Products/Products';
+import ProductDetail from './components/Products/ProductDetail/ProductDetail';
 import MainPage from './components/MainPage/MainPage';
 import Breadcrumb from './components/Breadcrumb/Breadcrumb';
 
@@ -70,7 +71,8 @@ class App extends Component {
                     <Route path="/forgotpwd" render={() => <Resetpassword />} />
                     <Route path="/myprofile" render={() => <MyProfile />} />
                     <Route path="/changepassword" render={() => <ChangePassword />} />
-                    <Route path="/products" render={() => <Products />} />
+                    <Route exact path="/product" render={() => <Products />} />
+                    <Route exact path="/product/:id" render={() => <ProductDetail />} />
                     <Route render={() => <MainPage />} />
                   </Switch>
                 </div>

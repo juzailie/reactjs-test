@@ -17,7 +17,7 @@ const Sidemenu = (props) => {
                         <NavLink className={"nav-link"} to="/changepassword">Change Password</NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink className={"nav-link"} to="/products">Products</NavLink>
+                        <NavLink className={"nav-link"} to="/product">Products</NavLink>
                     </li>
                 </ul>
             </div>

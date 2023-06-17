@@ -8,7 +8,7 @@ const Product = (props) => (
         <td>{props.name}</td>
         <td><div className="product-desc-limiter">{props.desc}</div></td>
         <td>
-            <NavLink className="thumbnail" to={'/productdetails/' + props.id} exact>
+            <NavLink className="thumbnail" to={'/product/' + props.id} exact>
                 <img src={props.imgpath} alt={props.name}  className="product-img"/>
             </NavLink>
         </td>
