@@ -5,9 +5,17 @@ import { AuthContext } from "../../context/auth-context";
 import './Sidemenu.css';
 
 const Sidemenu = (props) => {
+    
     const { authenticated } = useContext(AuthContext);
+    
+    // Check if the current location is the dashboard route
+    const isDashboardRoute = window.location.pathname === '/'
+
+    console.log("authenticated ", authenticated);
+    console.log("isDashboardRoute ", isDashboardRoute);
+
     return (
-        <div className={`col col-md-2 ${!authenticated && 'd-none'}`}>
+        <div className={`col col-md-2 ${(authenticated === false || isDashboardRoute === true) && 'd-none'}`}>
             <div className='side-menu'>
                 <ul className="nav flex-column">
                     <li className="nav-item">
