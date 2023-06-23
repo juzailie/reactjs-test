@@ -9,13 +9,21 @@ export class AuthProvider extends Component {
         authenticated: false,
         username: '',
         password: '',
+        userid: "",
     };
 
     componentDidMount() {
         // Perform actions on component load
         this.checkLogedin()
             .then((r) => {
+
                 console.log('auth provider loaded!');
+
+                let userid = localStorage.getItem("userid");
+                if (userid) {
+                    this.setState({ userid });
+                }
+                
             });
 
     }
@@ -43,25 +51,27 @@ export class AuthProvider extends Component {
         });
     }
 
-
     login = (username, password, userid) => {
         // Perform login logic and set the isLoggedIn state to true
         this.setState({ authenticated: true, username, password });
         localStorage.setItem("userid", userid);
+        this.setState({ userid: userid });
     };
 
     logout = () => {
         // Perform logout logic and set the isLoggedIn state to false
         this.setState({ authenticated: false, username: '', password: '' });
         localStorage.removeItem("userid");
+        this.setState({ userid: "" });
+
     };
 
     render() {
-        const { authenticated, username, password } = this.state;
+        const { authenticated, username, password, userid } = this.state;
         const { login, logout } = this;
 
         return (
-            <AuthContext.Provider value={{ authenticated, username, password, login, logout }}>
+            <AuthContext.Provider value={{ authenticated, username, password, userid, login, logout }}>
                 {this.props.children}
             </AuthContext.Provider>
         );

@@ -8,7 +8,7 @@ import './ChangePassword.css';
 
 const ChangePassword = (props) => {
 
-    const { authenticated } = useContext(AuthContext);
+    const { authenticated, userid } = useContext(AuthContext);
 
     const [currentpwd, setCurrentpwd] = useState('');
     const [newpwd, setNewpwd] = useState('');
@@ -19,36 +19,32 @@ const ChangePassword = (props) => {
     const [errorNewconfirmpwd, setErrorNewconfirmpwd] = useState('');
     const [errorPasswordNotSame, setErrorPasswordNotSame] = useState('');
 
-    const [submited, setsubmited] = useState('');
-    const [resetpasswordresult, setresetpasswordresult] = useState('');
-    const [isvalid, setisvalid] = useState('');
+    let isvalid = false;
 
     const handleSubmit = (e) => {
 
         e.preventDefault();
 
-        setsubmited(true);
-
-        setisvalid(true)
+        isvalid = true;
 
         if (currentpwd.trim() === '') {
             setErrorCurrentpwd('Current password is required.');
-            setisvalid(false);
+            isvalid = false;
         }
 
         if (newpwd.trim() === '') {
             setErrorNewpwd('New password is required.');
-            setisvalid(false);
+            isvalid = false;
         }
 
         if (newconfirmpwd.trim() === '') {
             setErrorNewconfirmpwd('Confirm New password is required.');
-            setisvalid(false);
+            isvalid = false;
         }
 
         if (newpwd !== newconfirmpwd) {
             setErrorPasswordNotSame('New Password and Confirm New Password is not same.');
-            setisvalid(false);
+            isvalid = false;
         }
 
         if (isvalid === true) {
@@ -58,7 +54,8 @@ const ChangePassword = (props) => {
             setErrorNewconfirmpwd('');
             setErrorPasswordNotSame('');
 
-            let userid = localStorage.getItem("userid");
+            console.log('userid ', userid);
+
             if (userid) {
 
                 var request = {
@@ -70,17 +67,21 @@ const ChangePassword = (props) => {
                 // change user password
                 UserService.changeuserpassword(userid, request)
                     .then((response) => {
+
                         let data = response.data;
+
                         console.log("changeuserpassword ", data);
+
                         if (response.status === 200) {
                             if (data) {
-                                setresetpasswordresult(true);
+                                alert("Password change successfully!");
                             } else {
-                                setresetpasswordresult(false);
+                                alert("Password change failed!");
                             }
                         } else if (response.status === 404) {
-                            setresetpasswordresult(false);
+                            alert("Password change failed!");
                         }
+
                     });
             }
 
@@ -192,28 +193,6 @@ const ChangePassword = (props) => {
                 )}
 
             </div>
-
-            <br />
-
-            {resetpasswordresult && submited && (
-                <div className="row">
-                    <div className="col-md-3">
-                        <div className="alert alert-success">
-                            Password change successfully!
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {!resetpasswordresult && submited && isvalid && (
-                <div className="row">
-                    <div className="col-md-3">
-                        <div className="alert alert-danger">
-                            Password change failed!
-                        </div>
-                    </div>
-                </div>
-            )}
 
         </div>
     );
