@@ -1,6 +1,8 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { AuthContext } from "../../context/auth-context";
+import { Redirect } from 'react-router-dom';
+import UserService from '../../Services/UserService';
 
 import './ChangePassword.css';
 
@@ -8,9 +10,106 @@ const ChangePassword = (props) => {
 
     const { authenticated } = useContext(AuthContext);
 
-    useEffect(() => {
-        return () => { console.log("cockpit.js cleanup work in useEffect"); };
-    }, []); // will only execute once after component rendered
+    const [currentpwd, setCurrentpwd] = useState('');
+    const [newpwd, setNewpwd] = useState('');
+    const [newconfirmpwd, setNewconfirmpwd] = useState('');
+
+    const [errorCurrentpwd, setErrorCurrentpwd] = useState('');
+    const [errorNewpwd, setErrorNewpwd] = useState('');
+    const [errorNewconfirmpwd, setErrorNewconfirmpwd] = useState('');
+
+    const [submited, setsubmited] = useState('');
+    const [resetpasswordresult, setresetpasswordresult] = useState('');
+    const [isvalid, setisvalid] = useState('');
+
+    const handleSubmit = (e) => {
+
+        e.preventDefault();
+
+        setsubmited(true);
+
+        setisvalid(true)
+
+        if (currentpwd.trim() === '') {
+            setErrorCurrentpwd('Current password is required.');
+            setisvalid(false);
+        }
+
+        if (currentpwd.trim() === '') {
+            setErrorNewpwd('New password is required.');
+            setisvalid(false);
+        }
+
+        if (currentpwd.trim() === '') {
+            setErrorNewconfirmpwd('Confirm New password is required.');
+            setisvalid(false);
+        }
+
+        if (isvalid == true) {
+            // clear error messages
+            setErrorCurrentpwd('');
+            setErrorNewpwd('');
+            setErrorNewconfirmpwd('');
+
+            let userid = localStorage.getItem("userid");
+            if (userid) {
+
+                var request = {
+                    currentpassword: currentpwd,
+                    newpassword: newpwd,
+                    comfirmpassword: newconfirmpwd
+                };
+
+                // change user password
+                UserService.changeuserpassword(userid, request)
+                    .then((response) => {
+                        let data = response.data;
+                        console.log("changeuserpassword ", data);
+                        if (response.status === 200) {
+                            if (data) {
+                                setresetpasswordresult(true);
+                            } else {
+                                setresetpasswordresult(false);
+                            }
+                        } else if (response.status === 404) {
+                            setresetpasswordresult(false);
+                        }
+                    });
+            }
+
+        }
+    }
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        if (name === 'currentpassword') {
+            setCurrentpwd(value);
+        }
+
+        if (name === 'newpassword') {
+            setNewpwd(value);
+        }
+
+        if (name === 'confirmpassword') {
+            setNewconfirmpwd(value);
+        }
+
+        setErrorCurrentpwd('');
+        if (name === 'currentpassword' && value.trim() === '') {
+            setErrorCurrentpwd('Current Password is required.');
+        }
+
+        setErrorNewpwd('');
+        if (name === 'newpassword' && value.trim() === '') {
+            setErrorNewpwd('New Password is required.');
+        }
+
+        setErrorNewconfirmpwd('');
+        if (name === 'confirmpassword' && value.trim() === '') {
+            setErrorNewconfirmpwd('Confirm New Password is required.');
+        }
+    };
 
     return (
         <div>
@@ -18,38 +117,42 @@ const ChangePassword = (props) => {
             <div className="row">
                 {authenticated && (
                     <div className="col-xs-12 col-sm-10 col-md-3">
-                        <form>
+                        <form onSubmit={handleSubmit}>
                             <div id="login-data">
                                 <div className="form-group">
                                     <label for="currentpassword">Current password</label>
                                     <input type="text"
-                                        id="currentpassword"
+                                        name="currentpassword"
                                         placeholder="Please enter Current Password"
-                                        className="form-control"
+                                        className={`form-control ${errorCurrentpwd && 'is-invalid'}`}
                                         formControlName="currentpassword"
-                                        required />
-                                    {/* <span className="help-block" *ngIf="currentpassword.invalid && (currentpassword.dirty || currentpassword.touched)">Current password is required</span> */}
+                                        value={currentpwd}
+                                        onChange={handleChange}
+                                    />
+                                    <span className="invalid-feedback">{errorCurrentpwd}</span>
                                 </div>
                                 <div className="form-group">
                                     <label for="newpassword">New password</label>
                                     <input type="password"
-                                        id="newpassword"
+                                        name="newpassword"
                                         placeholder="Please enter New Password"
-                                        className="form-control"
+                                        className={`form-control ${errorNewpwd && 'is-invalid'}`}
                                         formControlName="newpassword"
-                                        required />
-                                    {/* <span className="help-block" *ngIf="newpassword.invalid && (newpassword.dirty || newpassword.touched)">New password is required</span> */}
+                                        value={newpwd} onChange={handleChange}
+                                    />
+                                    <span className="invalid-feedback">{errorNewpwd}</span>
+
                                 </div>
                                 <div className="form-group">
                                     <label for="confirmpassword">Confirm New password</label>
                                     <input type="password"
-                                        id="confirmpassword"
+                                        name="confirmpassword"
                                         placeholder="Plase enter Confirm New Password"
-                                        className="form-control"
+                                        className={`form-control ${errorNewconfirmpwd && 'is-invalid'}`}
                                         formControlName="confirmpassword"
-                                        required />
-                                    {/* <span class="help-block" *ngIf="confirmpassword.invalid && (confirmpassword.dirty || confirmpassword.touched)">Confirm New password is required</span>
-                                <span class="help-block" *ngIf="passwordMatchError">Password does not match</span>*/}
+                                        value={newconfirmpwd} onChange={handleChange}
+                                    />
+                                    <span className="invalid-feedback">{errorNewconfirmpwd}</span>
                                 </div>
                                 <div className="form-group">
                                     <div className="row pull-right">
@@ -64,14 +167,34 @@ const ChangePassword = (props) => {
                 )}
 
                 {!authenticated && (
-                    <div className="col-md-3 offset-md-6">
-                        <h1>Unauthorized</h1>
-                    </div>
+                    <Redirect to="/unauthorized" />
                 )}
 
             </div>
-        </div>
 
+            <br />
+
+            {resetpasswordresult && submited && (
+                <div className="row">
+                    <div className="col-md-3">
+                        <div className="alert alert-success">
+                            Password change successfully!
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {!resetpasswordresult && submited && isvalid && (
+                <div className="row">
+                    <div className="col-md-3">
+                        <div className="alert alert-danger">
+                            Password change failed!
+                        </div>
+                    </div>
+                </div>
+            )}
+
+        </div>
     );
 
 };

@@ -42,6 +42,7 @@ const Resetpassword = () => {
     }
 
     const handleChange = (e) => {
+        
         const { name, value } = e.target;
         
         console.log("handleChange", [name, value]);

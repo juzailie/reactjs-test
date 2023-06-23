@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import './MyProfile.css';
 import { AuthContext } from "../../context/auth-context";
-
+import { Redirect } from 'react-router-dom';
 import UserService from '../../Services/UserService';
 
 const MyProfile = (props) => {
@@ -51,9 +51,8 @@ const MyProfile = (props) => {
             )}
 
             {!authenticated && (
-                <div className="col-md-3 offset-md-6">
-                    <h1>Unauthorized</h1>
-                </div>
+                <Redirect to="/unauthorized" />
+
             )}
 
         </div>

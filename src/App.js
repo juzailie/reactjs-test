@@ -14,32 +14,15 @@ import Products from './components/Products/Products';
 import ProductDetail from './components/Products/ProductDetail/ProductDetail';
 import MainPage from './components/MainPage/MainPage';
 import Breadcrumb from './components/Breadcrumb/Breadcrumb';
+import Unauthorized from './components/Unauthorized/Unauthorized';
 
 class App extends Component {
-
-  state = {
-    authenticated: false,
-    username: "",
-    password: ""
-  }
-
-  loginHandler = (authenticated) => {
-    console.log("loginhandler", this.props);
-    this.setState({ authenticated: authenticated });
-  };
-
-  logoutHandler = () => {
-    console.log("logoutHandler", this.props);
-    window.location.href = "/login"
-    this.setState({ authenticated: false });
-  };
 
   render() {
     return (
       <BrowserRouter>
 
         <div className="container-fluid">
-
 
           <AuthProvider>
 
@@ -66,13 +49,14 @@ class App extends Component {
               <div className='col col-md-10'>
                 <div>
                   <Switch>
-                    <Route path="/login" render={() => <Login login={this.loginHandler} />} />
-                    <Route path="/logout" render={() => <Login login={this.loginHandler} />} />
+                    <Route path="/login" render={() => <Login />} />
+                    <Route path="/logout" render={() => <Login />} />
                     <Route path="/forgotpwd" render={() => <Resetpassword />} />
                     <Route path="/myprofile" render={() => <MyProfile />} />
                     <Route path="/changepassword" render={() => <ChangePassword />} />
                     <Route exact path="/product" render={() => <Products />} />
                     <Route exact path="/product/:id" render={() => <ProductDetail />} />
+                    <Route path="/unauthorized" render={() => <Unauthorized/>} />
                     <Route render={() => <MainPage />} />
                   </Switch>
                 </div>

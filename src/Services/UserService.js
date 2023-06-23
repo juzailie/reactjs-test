@@ -11,6 +11,10 @@ class UserService {
     static getuser(userid){
         return axios.get(USER_API_BASE_URL + '/' + userid);
     }
+
+    static changeuserpassword(userid, request){
+        return axios.post(USER_API_BASE_URL + '/changepassword/' + userid, request);
+    }
 }
 
 export default UserService

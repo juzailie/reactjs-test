@@ -3,6 +3,7 @@ import Product from './Product/Product';
 import './Products.css';
 import { AuthContext } from "../../context/auth-context";
 import ProductService from '../../Services/ProductService';
+import { Redirect } from 'react-router-dom';
 
 class Products extends Component {
 
@@ -54,9 +55,7 @@ class Products extends Component {
                     </div>
                 )}
                 {!authenticated && (
-                    <div className="col-md-3 offset-md-6">
-                        <h1>Unauthorized</h1>
-                    </div>
+                    <Redirect to="/unauthorized" />
                 )}
             </div>
         );

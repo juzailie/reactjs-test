@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { AuthContext } from "../../../context/auth-context";
 import ProductService from '../../../Services/ProductService';
 
@@ -12,7 +12,7 @@ class ProductDetail extends Component {
     state = {
         id: "",
         name: "",
-        imagePath: "",
+        imagePath: "/",
         description: "",
         productVariants: [
             {
@@ -42,64 +42,58 @@ class ProductDetail extends Component {
     render() {
         return (
             <div>
-
-                {!this.state.id && (
-                    <div>
-                        <h1 className='h1-red'>Invalid Product ID</h1>
-                    </div>)
-                }
-                <div>
-                    <div className="row">
-                        <div className="col-md-12">
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <h1 className='header-title'>{this.state.name}</h1>
-                                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <h1 className={`h1-red ${(this.state.id) && 'd-none'}`}>Invalid Product ID</h1>
+                    </div>
+                </div>
+                <div className={`row ${(!this.state.id) && 'd-none'}`}>
+                    <div className="col-md-12">
+                        <div className="row">
+                            <div className="col-md-4">
+                                <h1 className='header-title'>{this.state.name}</h1>
                             </div>
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <a href="#" className='thumbnail'>
-                                        <img src={this.state.imagePath} width={'550px'} />
-                                    </a>
-                                </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <img src={this.state.imagePath} width={'550px'} alt={this.state.name} />
                             </div>
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <table className="table">
-                                        <tbody>
-                                            <tr>
-                                                <td>Description</td>
-                                                <td>{this.state.description}</td>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <table className="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Description</td>
+                                            <td>{this.state.description}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Variance</b></td>
+                                            <td></td>
+                                        </tr>
+                                        {this.state.productVariants.map((item, index) => (
+                                            <tr key={index}>
+                                                <td>{item.info}</td>
+                                                <td>{item.price.toLocaleString('en-MY', { style: 'currency', currency: 'MYR' })}</td>
                                             </tr>
-                                            <tr>
-                                                <td><b>Variance</b></td>
-                                                <td></td>
-                                            </tr>
-                                            {this.state.productVariants.map((item, index) => (
-                                                <tr key={index}>
-                                                    <td>{item.info}</td>
-                                                    <td>{item.price.toLocaleString('en-MY', { style: 'currency', currency: 'MYR' })}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-
                 </div>
-
                 <div className="row">
-                    <div className="col-md-12">
-                        <button className="btn btn-primary pull-right" onClick={this.previousPage}>Back</button>
+                    <div className="col-md-12 d-flex justify-content-end">
+                        <button className="btn btn-primary pull-right mr-5" onClick={this.previousPage}>Back</button>
                     </div>
-                </div >
-
-            </div >
+                </div>
+            </div>
         )
     };
 
 }
+
+// {!this.state.id && () }
 
 export default withRouter(ProductDetail);
