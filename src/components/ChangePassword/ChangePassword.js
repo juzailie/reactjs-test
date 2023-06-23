@@ -17,6 +17,7 @@ const ChangePassword = (props) => {
     const [errorCurrentpwd, setErrorCurrentpwd] = useState('');
     const [errorNewpwd, setErrorNewpwd] = useState('');
     const [errorNewconfirmpwd, setErrorNewconfirmpwd] = useState('');
+    const [errorPasswordNotSame, setErrorPasswordNotSame] = useState('');
 
     const [submited, setsubmited] = useState('');
     const [resetpasswordresult, setresetpasswordresult] = useState('');
@@ -35,21 +36,27 @@ const ChangePassword = (props) => {
             setisvalid(false);
         }
 
-        if (currentpwd.trim() === '') {
+        if (newpwd.trim() === '') {
             setErrorNewpwd('New password is required.');
             setisvalid(false);
         }
 
-        if (currentpwd.trim() === '') {
+        if (newconfirmpwd.trim() === '') {
             setErrorNewconfirmpwd('Confirm New password is required.');
             setisvalid(false);
         }
 
-        if (isvalid == true) {
+        if (newpwd !== newconfirmpwd) {
+            setErrorPasswordNotSame('New Password and Confirm New Password is not same.');
+            setisvalid(false);
+        }
+
+        if (isvalid === true) {
             // clear error messages
             setErrorCurrentpwd('');
             setErrorNewpwd('');
             setErrorNewconfirmpwd('');
+            setErrorPasswordNotSame('');
 
             let userid = localStorage.getItem("userid");
             if (userid) {
@@ -89,10 +96,22 @@ const ChangePassword = (props) => {
 
         if (name === 'newpassword') {
             setNewpwd(value);
+            console.log("newpwd ", newpwd, value);
+
+            setErrorPasswordNotSame('');
+            if (value !== newconfirmpwd) {
+                setErrorPasswordNotSame('New Password and Confirm New Password is not same.');
+            }
         }
 
         if (name === 'confirmpassword') {
             setNewconfirmpwd(value);
+            console.log("newconfirmpwd ", newconfirmpwd, value);
+
+            setErrorPasswordNotSame('');
+            if (value !== newpwd) {
+                setErrorPasswordNotSame('New Password and Confirm New Password is not same.');
+            }
         }
 
         setErrorCurrentpwd('');
@@ -109,6 +128,7 @@ const ChangePassword = (props) => {
         if (name === 'confirmpassword' && value.trim() === '') {
             setErrorNewconfirmpwd('Confirm New Password is required.');
         }
+      
     };
 
     return (
@@ -148,11 +168,12 @@ const ChangePassword = (props) => {
                                     <input type="password"
                                         name="confirmpassword"
                                         placeholder="Plase enter Confirm New Password"
-                                        className={`form-control ${errorNewconfirmpwd && 'is-invalid'}`}
+                                        className={`form-control ${(errorNewconfirmpwd || errorPasswordNotSame) && 'is-invalid'}`}
                                         formControlName="confirmpassword"
                                         value={newconfirmpwd} onChange={handleChange}
                                     />
                                     <span className="invalid-feedback">{errorNewconfirmpwd}</span>
+                                    <span className="invalid-feedback">{errorPasswordNotSame}</span>
                                 </div>
                                 <div className="form-group">
                                     <div className="row pull-right">
