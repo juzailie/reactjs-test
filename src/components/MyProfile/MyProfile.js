@@ -1,8 +1,8 @@
 import React, { useEffect, useContext, useState } from 'react';
 import './MyProfile.css';
 import { AuthContext } from "../../context/auth-context";
-import { Redirect } from 'react-router-dom';
 import UserService from '../../Services/UserService';
+import { Redirect } from 'react-router-dom';
 
 const MyProfile = (props) => {
 
@@ -13,22 +13,28 @@ const MyProfile = (props) => {
     useEffect(() => {
 
         let userid = localStorage.getItem("userid");
+
         if (userid) {
-            UserService.getuser(userid).then((response) => {
+            UserService.getuser(userid)
+                .then((response) => {
 
-                const { status } = response;
-                const { email, username } = response.data;
+                    console.log("myprofile getuser ", response);
 
-                if (status === 200) {
-                    setEmail(email);
-                    setUsername(username);
-                }
-            });
+                    const { status } = response;
+                    const { email, username } = response.data;
+
+                    if (status === 200) {
+                        setEmail(email);
+                        setUsername(username);
+                    }
+
+                });
         }
 
         return () => {
             console.log("cockpit.js cleanup work in useEffect");
         };
+
     }, []); // will only execute once after component rendered
 
     return (
@@ -52,7 +58,6 @@ const MyProfile = (props) => {
 
             {!authenticated && (
                 <Redirect to="/unauthorized" />
-
             )}
 
         </div>

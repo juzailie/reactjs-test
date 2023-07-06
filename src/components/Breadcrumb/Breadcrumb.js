@@ -1,42 +1,131 @@
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import ProductService from '../../Services/ProductService';
 
-const Breadcrumb = () => {
+class Breadcrumb extends Component {
 
-  const pathSegments =  window.location.pathname.split('/').filter(segment => segment !== '');
+  state = {
+    pathSegments: [""],
+    isdashboard: false
+  };
 
-  console.log("pathSegments ", pathSegments);
+  componentDidMount() {
+    let paths = this.props.location.pathname.split('/').filter(segment => segment !== '');
+    this.setState({ pathSegments: paths })
+  }
 
-  let isdashboard = false;
+  shouldComponentUpdate(nextProps, nextState) {
 
-  if(pathSegments.length > 0){
-    
-    if(pathSegments[0] === "forgotpwd"){
-      pathSegments[0] = "Forgot Password";
-    }else if (pathSegments[0] === "myprofile"){
-      pathSegments[0] = "My Profile";
-    }else if (pathSegments[0] === "changepassword"){
-      pathSegments[0] = "Change Password";
-    }else if (pathSegments[0] === "dasboard"){
-      isdashboard = true;
+    const currentpath = this.props.location.pathname;
+    const newpath = nextProps.location.pathname;
+
+    // let currentPaths = this.props.location.pathname.split('/').filter(segment => segment !== '');
+    let newPaths = nextProps.location.pathname.split('/').filter(segment => segment !== '');
+
+    if (currentpath !== newpath) {
+
+      if (newPaths[0] === "product") {
+
+        if (newPaths.length === 2) {
+
+          ProductService.get(newPaths[1])
+            .then((d) => {
+
+              if (d.status === 200) {
+                newPaths[1] = d.data.name;
+                this.setState({ pathSegments: newPaths });
+              }
+
+            });
+        } else {
+          this.setState({ pathSegments: newPaths });
+        }
+
+      } else {
+        this.setState({ pathSegments: newPaths });
+      }
+
     }
 
-  }
-  return (
+    if (newPaths.length > 0) {
 
-    <nav className={`${(pathSegments.length === 0 || isdashboard) && 'd-none'}`} aria-label="breadcrumb">
-      <ol className="breadcrumb">
-        {pathSegments.map((segment, index) => (
-          <li key={index} className="breadcrumb-item active">
-            <Link to={`/${pathSegments.slice(0, index + 1).join('/')}`}>
-              {segment.charAt(0).toUpperCase() + segment.slice(1)}
-            </Link>
-          </li>
-        ))}
-      </ol>
-    </nav>
-    
-  );
+      if (newPaths[0] === "dashboard") {
+
+        if (this.state.isdashboard !== true) {
+          this.setState({ isdashboard: true });
+        }
+
+      } else {
+
+        if (this.state.isdashboard === true) {
+          this.setState({ isdashboard: false });
+        }
+
+      }
+
+
+    }
+
+    return true;
+
+  }
+
+  toPropertyPathName(paths) {
+
+    let result = "";
+
+    if (paths === "forgotpwd") {
+      result = "Forgot Password";
+    } else if (paths === "myprofile") {
+      result = "My Profile";
+    } else if (paths === "changepassword") {
+      result = "Change Password";
+    } else if (paths === "dashboard") {
+      result = "Dashboard";
+    } else if (paths === "product") {
+      result = "Product";
+    } else if (paths === "product") {
+      result = "Product";
+    } else if (paths === "login") {
+      result = "Sign-In";
+    } else if (paths === "unauthorized") {
+      result = "Unauthorized";
+    }else{
+      result = paths;
+    }
+
+    return result;
+  }
+
+  render() {
+
+    let paths = this.state.pathSegments;
+    console.log("render path ", paths);
+
+    return (
+      <nav className={`${(paths.length === 0 || this.state.isdashboard) && 'd-none'}`} aria-label="breadcrumb">
+
+        <ol className="breadcrumb">
+
+          {paths.map((segment, index) => (
+
+            <li key={index} className="breadcrumb-item active">
+
+              <Link to={`/${paths.slice(0, index + 1).join('/')}`}>
+                {this.toPropertyPathName(segment)}
+              </Link>
+
+            </li>
+
+          ))}
+
+        </ol>
+
+      </nav>
+    );
+  }
+
+
 };
 
-
-export default Breadcrumb;
+export default withRouter(Breadcrumb);

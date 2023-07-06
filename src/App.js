@@ -15,6 +15,7 @@ import ProductDetail from './components/Products/ProductDetail/ProductDetail';
 import MainPage from './components/MainPage/MainPage';
 import Breadcrumb from './components/Breadcrumb/Breadcrumb';
 import Unauthorized from './components/Unauthorized/Unauthorized';
+import Dashboard from './components/Dashboard/Dashboard';
 
 class App extends Component {
 
@@ -43,7 +44,7 @@ class App extends Component {
             </div>
 
             <div className='row'>
-              
+
               <Sidemenu></Sidemenu>
 
               <div className='col col-md-10'>
@@ -56,8 +57,9 @@ class App extends Component {
                     <Route path="/changepassword" render={() => <ChangePassword />} />
                     <Route exact path="/product" render={() => <Products />} />
                     <Route exact path="/product/:id" render={() => <ProductDetail />} />
-                    <Route path="/unauthorized" render={() => <Unauthorized/>} />
-                    <Route render={() => <MainPage />} />
+                    <Route path="/unauthorized" render={() => <Unauthorized />} />
+                    <Route path="/dashboard" render={() => <Dashboard />} />
+                    <Route path="/" render={() => <MainPage />} />
                   </Switch>
                 </div>
               </div>

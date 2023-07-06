@@ -77,7 +77,7 @@ class Login extends Component {
             // update auth context
             login(username, password, data.id);
             // navigate to myprofile
-            this.props.history.push("/myprofile");
+            this.props.history.push("/");
         } else {
             // TODO: show error msg
             alert("Username or password is incorrect")

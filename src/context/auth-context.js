@@ -16,14 +16,11 @@ export class AuthProvider extends Component {
         // Perform actions on component load
         this.checkLogedin()
             .then((r) => {
-
                 console.log('auth provider loaded!');
-
                 let userid = localStorage.getItem("userid");
                 if (userid) {
                     this.setState({ userid });
                 }
-                
             });
 
     }

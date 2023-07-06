@@ -54,8 +54,6 @@ const ChangePassword = (props) => {
             setErrorNewconfirmpwd('');
             setErrorPasswordNotSame('');
 
-            console.log('userid ', userid);
-
             if (userid) {
 
                 var request = {
@@ -146,7 +144,6 @@ const ChangePassword = (props) => {
                                         name="currentpassword"
                                         placeholder="Please enter Current Password"
                                         className={`form-control ${errorCurrentpwd && 'is-invalid'}`}
-                                        formControlName="currentpassword"
                                         value={currentpwd}
                                         onChange={handleChange}
                                     />
@@ -158,7 +155,6 @@ const ChangePassword = (props) => {
                                         name="newpassword"
                                         placeholder="Please enter New Password"
                                         className={`form-control ${errorNewpwd && 'is-invalid'}`}
-                                        formControlName="newpassword"
                                         value={newpwd} onChange={handleChange}
                                     />
                                     <span className="invalid-feedback">{errorNewpwd}</span>

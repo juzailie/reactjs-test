@@ -1,0 +1,4 @@
+.google-iframe {
+    min-height: calc(100vh - 100px);
+    min-width: calc(100vw - 30px);
+}
